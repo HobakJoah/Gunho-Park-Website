@@ -68,12 +68,14 @@ export function ChatInput({ chatMessages, setChatMessages }) {
                 body: JSON.stringify({ message: inputText, history })
             });
 
-            if (!response.ok) {
-                throw new Error(`Request failed with status ${response.status}`);
-            }
+            const data = await response.json().catch(() => ({}));
 
-            const data = await response.json();
-            responseText = data.reply;
+            // The server sends a specific, user-safe message for known failure
+            // cases (rate limited, out of quota, bad input) — show that instead
+            // of a generic fallback whenever one comes back.
+            responseText = response.ok
+                ? data.reply
+                : data.error || "Sorry, I ran into an error responding. Please try again.";
         } catch (error) {
             console.error('Chat request failed:', error);
             responseText = "Sorry, I ran into an error responding. Please try again.";

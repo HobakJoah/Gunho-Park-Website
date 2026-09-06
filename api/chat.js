@@ -16,7 +16,7 @@ going longer if the question explicitly asks for detail or a list.
 ${aboutMe}
 ---`;
 
-const MODEL = 'gemini-3.6-flash';
+const MODEL = 'gemini-flash-latest';
 const MAX_MESSAGE_LENGTH = 2000;
 const MAX_OUTPUT_TOKENS = 1024;
 
@@ -90,6 +90,12 @@ export default async function handler(req, res) {
         res.status(200).json({ reply: response.text });
     } catch (err) {
         console.error('Gemini API error:', err);
+
+        if (err?.status === 429) {
+            res.status(429).json({ error: "I've hit my daily response limit for today — please check back tomorrow!" });
+            return;
+        }
+
         res.status(500).json({ error: 'Something went wrong generating a response.' });
     }
 }
