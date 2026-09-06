@@ -18,7 +18,7 @@ ${aboutMe}
 
 const MODEL = 'gemini-3.6-flash';
 const MAX_MESSAGE_LENGTH = 2000;
-const MAX_OUTPUT_TOKENS = 400;
+const MAX_OUTPUT_TOKENS = 1024;
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
