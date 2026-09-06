@@ -1,4 +1,5 @@
 import RobotProfileImage from '../assets/robot.png'
+import FidoImage from '../assets/Fido.jpg'
 import WallPaperImage from '../assets/wallpaper.jpg'
 import dayjs from 'dayjs'
 import { ContactForm } from './ContactForm'
@@ -19,7 +20,7 @@ export function ChatMessage({ message, sender, canOfferContact, question, contac
         ? 'chat-message-user'
         : 'chat-message-robot'}>
         {sender === 'robot' && (
-            <img src={RobotProfileImage} className = "chat-message-profile"/>
+            <img src={FidoImage} className = "chat-message-profile"/>
         )}
         {isLoading ? (
             <div className="chat-message-loading">
