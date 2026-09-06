@@ -1,10 +1,7 @@
 # About [Gunho Park]
 
 ## Summary
-[2-4 sentence pitch: who you are, what you do, what you're looking for.
-e.g. "Frontend-focused software engineer with 3 years of experience building
-React applications. Currently looking for full-stack roles at product-focused
-startups."]
+A sophomore in CS at Purdue University
 
 ## Contact
 - Email: [hobak4all@gmail.com]
@@ -35,7 +32,7 @@ startups."]
 - Designed and deployed interactive virtual reality prototypes focused on user social interaction and entertainmen
 - Modeled foundational 3D architectural structures using Blender, and integrated the fully textured environments into AltspaceVR (via Unity)
 
-## Projects
+### Projects
 
 ### [Approximating Competitor Market Share - BASF]
 - Cleaned and segmented national and state-level agricultural data across 34 U.S. states utilizing Python and Pandas library
