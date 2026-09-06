@@ -41,23 +41,22 @@ Component roles:
   the placeholder with the reply (or a fallback string on error). Because it rebuilds from the local
   `newChatMessages` snapshot rather than using an updater function, `isLoading` guards against
   overlapping sends.
-- `api/chat.js` — Vercel serverless function; the only place `GEMINI_API_KEY` is read. Validates the
-  incoming message (non-empty, ≤2000 chars), forwards `history` + the new message to `gemini-3.6-flash`
-  with the `about-me.md`-derived system instruction, and returns `{ reply }` (or `{ error }` with a
-  4xx/5xx status).
+- `api/chat.js` — Vercel serverless function; the only place `GEMINI_API_KEY` is read. Rate-limits by
+  IP (in-memory, resets per cold start — a soft deterrent, not a hard guarantee across concurrent
+  instances) before validating the incoming message (non-empty, ≤2000 chars), then forwards `history`
+  + the new message to `gemini-3.6-flash` (capped at `maxOutputTokens`, with a system-instruction hint
+  to keep answers brief) and returns `{ reply }` (or `{ error }` with a 4xx/5xx status).
 - `components/ChatMessages.jsx` — maps the array to `ChatMessage`, and defines the local
   `useAutoScroll` hook that pins the container to `scrollHeight` on change.
 - `components/ChatMessage.jsx` — picks the user/robot layout and profile image. The timestamp is
   computed with `dayjs()` at render time, so it is *not* the send time and shifts on re-render; if
   the time needs to be real, store it on the message object at creation.
 
-Two consequences to keep in mind when touching message state:
-- `message` may hold JSX, not just a string, so anything that serializes or measures messages must
-  handle that.
-- `App.jsx` writes `chatMessages` to `localStorage` under the key `messages` on every change but
-  never reads it back, so history does not actually survive a reload (and the spinner JSX serializes
-  to an empty object). Restoring history means loading that key into the initial state and keeping
-  the stored shape string-only.
+A consequence to keep in mind when touching message state: `message` may hold JSX, not just a string
+(the loading spinner), so anything that serializes or measures messages must handle that. `App.jsx`
+persists `chatMessages` to `localStorage` under the key `messages` on every change and restores it as
+the initial state via `loadStoredMessages`, which filters to string-only messages — so a stale spinner
+placeholder from a tab closed mid-request is dropped rather than coming back as a broken `{}`.
 
 ## Conventions
 
