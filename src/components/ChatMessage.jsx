@@ -2,21 +2,34 @@ import RobotProfileImage from '../assets/robot.png'
 import UserProfileImage from '../assets/user.png'
 import WallPaperImage from '../assets/wallpaper.jpg'
 import dayjs from 'dayjs'
+import { ContactForm } from './ContactForm'
 
 import './ChatMessage.css'
 
-export function ChatMessage({ message, sender }) {
+// canOfferContact/question/contactSent only ever appear on a robot message
+// the backend flagged as unanswered (see api/chat.js's UNANSWERED_MARKER);
+// onContactSent reports back up to App.jsx's chatMessages state once the note
+// is actually sent, so the form->confirmation swap survives a reload.
+export function ChatMessage({ message, sender, canOfferContact, question, contactSent, onContactSent }) {
     const time = dayjs().valueOf();
     return (
         <div className={
-        sender === 'user' 
-        ? 'chat-message-user' 
+        sender === 'user'
+        ? 'chat-message-user'
         : 'chat-message-robot'}>
         {sender === 'robot' && (
             <img src={RobotProfileImage} className = "chat-message-profile"/>
         )}
         <div className = "chat-message-text">
             {message}
+            {canOfferContact && (
+                contactSent
+                    ? <p className="contact-form-prompt">
+                        Thanks! Gunho will get back to you on this soon — and once he answers,
+                        I'll learn it too, so I can answer it myself next time.
+                      </p>
+                    : <ContactForm question={question} onSent={onContactSent} />
+            )}
             <p className='time-text'>
                 {dayjs(time).format('h:mma')}
             </p>

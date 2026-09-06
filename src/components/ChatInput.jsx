@@ -61,6 +61,7 @@ export function ChatInput({ chatMessages, setChatMessages }) {
         ])
 
         let responseText;
+        let canOfferContact = false;
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
@@ -76,6 +77,7 @@ export function ChatInput({ chatMessages, setChatMessages }) {
             responseText = response.ok
                 ? data.reply
                 : data.error || "Sorry, I ran into an error responding. Please try again.";
+            canOfferContact = response.ok && Boolean(data.canOfferContact);
         } catch (error) {
             console.error('Chat request failed:', error);
             responseText = "Sorry, I ran into an error responding. Please try again.";
@@ -86,7 +88,10 @@ export function ChatInput({ chatMessages, setChatMessages }) {
         {
             message: responseText,
             sender: 'robot',
-            id: crypto.randomUUID()
+            id: crypto.randomUUID(),
+            // Only set when the backend couldn't answer from about-me.md —
+            // ChatMessage shows a "send this to Gunho?" form when this is true.
+            ...(canOfferContact ? { canOfferContact: true, question: inputText } : {})
         }
         ]);
 

@@ -1,0 +1,40 @@
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.contact-form-prompt {
+  font-size: 13px;
+  margin: 0;
+}
+
+.contact-form-input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-width: 1px;
+  font-size: 14px;
+}
+
+.contact-form-error {
+  color: rgb(220, 53, 69);
+  font-size: 12px;
+  margin: 0;
+}
+
+.contact-form-submit {
+  background-color: rgb(25, 135, 84);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.contact-form-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

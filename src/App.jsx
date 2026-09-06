@@ -34,8 +34,9 @@ function App() {
           Send a message using the textbox below.
           </p> 
         : <p></p>}
-      <ChatMessages 
+      <ChatMessages
         chatMessages={chatMessages}
+        setChatMessages={setChatMessages}
       />
 
       <ChatInput 
