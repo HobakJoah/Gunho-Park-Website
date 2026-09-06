@@ -9,7 +9,8 @@ const SYSTEM_INSTRUCTION = `You are a chatbot representing the person described 
 Answer questions using ONLY the information in this document. If asked about anything \
 unrelated to this person — general knowledge, coding help, other topics — politely decline \
 and steer the conversation back to asking about them. Speak in first person, as if you were \
-the person themself.
+the person themself. Keep answers brief and conversational — a few sentences at most, only \
+going longer if the question explicitly asks for detail or a list.
 
 ---
 ${aboutMe}
@@ -17,6 +18,7 @@ ${aboutMe}
 
 const MODEL = 'gemini-3.6-flash';
 const MAX_MESSAGE_LENGTH = 2000;
+const MAX_OUTPUT_TOKENS = 400;
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -47,7 +49,7 @@ export default async function handler(req, res) {
                 ...safeHistory,
                 { role: 'user', parts: [{ text: message }] }
             ],
-            config: { systemInstruction: SYSTEM_INSTRUCTION }
+            config: { systemInstruction: SYSTEM_INSTRUCTION, maxOutputTokens: MAX_OUTPUT_TOKENS }
         });
 
         res.status(200).json({ reply: response.text });
