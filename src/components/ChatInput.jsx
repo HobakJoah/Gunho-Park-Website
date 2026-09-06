@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import LoadingSpinnerGif from '../assets/loading-spinner.gif'
+import YourNameCometGif from '../assets/YourName_Comet.gif'
 import './ChatInput.css'
 
 // Gemini's chat format only wants role + text turns, and only ever saw string
@@ -53,10 +53,12 @@ export function ChatInput({ chatMessages, setChatMessages }) {
         ...newChatMessages,
         {
             message: <img
-                    src= {LoadingSpinnerGif}
+                    src= {YourNameCometGif}
                     className = "loading-spinner-box"></img>,
             sender: 'robot',
-            id: crypto.randomUUID()
+            id: crypto.randomUUID(),
+            // ChatMessage skips the bubble background and timestamp for this one.
+            isLoading: true
         }
         ])
 

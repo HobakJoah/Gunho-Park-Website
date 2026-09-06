@@ -27,6 +27,13 @@
   object-fit: cover;
 }
 
+.chat-message-loading {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
 .time-text {
   color: gray;
   font-size: 12px;

@@ -24,6 +24,8 @@
 }
 
 .loading-spinner-box {
-  height: 40px;
-  margin: -15px;
+  height: 60px;
+  width: 60px;
+
+  object-fit: contain;
 }

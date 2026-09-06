@@ -43,6 +43,7 @@ function ChatMessages({ chatMessages, setChatMessages }) {
                 question={chatMessage.question}
                 contactSent={chatMessage.contactSent}
                 onContactSent={() => markContactSent(chatMessage.id)}
+                isLoading={chatMessage.isLoading}
                 key= {chatMessage.id}
               />
             );

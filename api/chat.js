@@ -110,6 +110,11 @@ export default async function handler(req, res) {
             return;
         }
 
+        if (err?.status === 503) {
+            res.status(503).json({ error: "I'm facing high demand on my end right now — please try again in a bit." });
+            return;
+        }
+
         res.status(500).json({ error: 'Something went wrong generating a response.' });
     }
 }

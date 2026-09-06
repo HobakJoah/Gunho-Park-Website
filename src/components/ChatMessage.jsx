@@ -1,5 +1,4 @@
 import RobotProfileImage from '../assets/robot.png'
-import UserProfileImage from '../assets/user.png'
 import WallPaperImage from '../assets/wallpaper.jpg'
 import dayjs from 'dayjs'
 import { ContactForm } from './ContactForm'
@@ -10,7 +9,9 @@ import './ChatMessage.css'
 // the backend flagged as unanswered (see api/chat.js's UNANSWERED_MARKER);
 // onContactSent reports back up to App.jsx's chatMessages state once the note
 // is actually sent, so the form->confirmation swap survives a reload.
-export function ChatMessage({ message, sender, canOfferContact, question, contactSent, onContactSent }) {
+// isLoading marks the placeholder gif message (see ChatInput.jsx) — it gets
+// a plain, bubble-free treatment with no timestamp since it's not a real reply.
+export function ChatMessage({ message, sender, canOfferContact, question, contactSent, onContactSent, isLoading }) {
     const time = dayjs().valueOf();
     return (
         <div className={
@@ -20,20 +21,26 @@ export function ChatMessage({ message, sender, canOfferContact, question, contac
         {sender === 'robot' && (
             <img src={RobotProfileImage} className = "chat-message-profile"/>
         )}
-        <div className = "chat-message-text">
-            {message}
-            {canOfferContact && (
-                contactSent
-                    ? <p className="contact-form-prompt">
-                        Thanks! Gunho will get back to you on this soon — and once he answers,
-                        I'll learn it too, so I can answer it myself next time.
-                      </p>
-                    : <ContactForm question={question} onSent={onContactSent} />
-            )}
-            <p className='time-text'>
-                {dayjs(time).format('h:mma')}
-            </p>
-        </div>
+        {isLoading ? (
+            <div className="chat-message-loading">
+                {message}
+            </div>
+        ) : (
+            <div className = "chat-message-text">
+                {message}
+                {canOfferContact && (
+                    contactSent
+                        ? <p className="contact-form-prompt">
+                            Thanks! Gunho will get back to you on this soon — and once he answers,
+                            I'll learn it too, so I can answer it myself next time.
+                          </p>
+                        : <ContactForm question={question} onSent={onContactSent} />
+                )}
+                <p className='time-text'>
+                    {dayjs(time).format('h:mma')}
+                </p>
+            </div>
+        )}
         {sender === 'user' && (
             <img src={WallPaperImage} className = "chat-message-profile"/>
         )}
