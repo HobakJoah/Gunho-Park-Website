@@ -20,11 +20,46 @@ const MODEL = 'gemini-3.6-flash';
 const MAX_MESSAGE_LENGTH = 2000;
 const MAX_OUTPUT_TOKENS = 400;
 
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
+// Per-instance, in-memory rate limiting. Vercel functions can run as multiple
+// concurrent instances and this map resets on every cold start, so it's a
+// soft deterrent against casual abuse/quota-burning, not a hard guarantee.
+// A shared store (e.g. Vercel KV / Upstash) would be needed for a strict limit.
+const requestLog = new Map(); // ip -> { count, windowStart }
+
+function getClientIp(req) {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (typeof forwarded === 'string' && forwarded.length > 0) {
+        return forwarded.split(',')[0].trim();
+    }
+    return req.socket?.remoteAddress ?? 'unknown';
+}
+
+function isRateLimited(ip) {
+    const now = Date.now();
+    const entry = requestLog.get(ip);
+
+    if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+        requestLog.set(ip, { count: 1, windowStart: now });
+        return false;
+    }
+
+    entry.count += 1;
+    return entry.count > RATE_LIMIT_MAX_REQUESTS;
+}
+
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         res.status(405).json({ error: 'Method not allowed' });
+        return;
+    }
+
+    if (isRateLimited(getClientIp(req))) {
+        res.status(429).json({ error: 'Too many requests. Please wait a moment and try again.' });
         return;
     }
 
