@@ -1,4 +1,3 @@
-import RobotProfileImage from '../assets/robot.png'
 import FidoImage from '../assets/Fido.jpg'
 import WallPaperImage from '../assets/wallpaper.jpg'
 import dayjs from 'dayjs'

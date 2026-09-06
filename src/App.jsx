@@ -30,8 +30,8 @@ function App() {
 
       {chatMessages.length === 0 
         ? <p className = "welcome-text">
-          Welcome to the chatbot project! 
-          Send a message using the textbox below.
+          Welcome to the Gunho-Bot! 
+          Type /clear to clear conversation
           </p> 
         : <p></p>}
       <ChatMessages

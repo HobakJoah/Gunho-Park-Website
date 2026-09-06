@@ -35,6 +35,15 @@ export function ChatInput({ chatMessages, setChatMessages }) {
         return;
         }
 
+        // Local-only command: the whole conversation lives in chatMessages
+        // (and its localStorage mirror in App.jsx), so clearing it never
+        // touches the backend.
+        if (inputText.trim().toLowerCase() === '/clear') {
+            setChatMessages([]);
+            setInputText('');
+            return;
+        }
+
         setIsLoading(true);
         const history = toGeminiHistory(chatMessages);
         const newChatMessages = [
@@ -103,7 +112,7 @@ export function ChatInput({ chatMessages, setChatMessages }) {
     return (
         <div className = "chat-input-container">
         <input
-            placeholder="Send a message to Chatbot"
+            placeholder="Ask anything about me!"
             size="30"
             onChange={saveInputText}
             onKeyDown={keyboardEvent}
